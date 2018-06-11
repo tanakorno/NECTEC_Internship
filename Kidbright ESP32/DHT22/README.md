@@ -1,9 +1,9 @@
 Cloud
 --------------------------
 
-* **[freeboard.igridproject](http://freeboard.igridproject.info)**
+* **[freeboard.igridproject.info](http://freeboard.igridproject.info)**
 
-Data Source
+Data Source Setting
 --------------------------
 
 ```
