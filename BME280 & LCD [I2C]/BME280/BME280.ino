@@ -3,18 +3,20 @@
 
 #include "SparkFunBME280.h"
 
+#define BAUD_RATE 9600
+
 #define ROW 2
 #define COL 16
 
 BME280 mySensor;
 LiquidCrystal_I2C lcd(0x27, COL, ROW);
 
+
 void setup()
 {
-  Serial.begin(9600);
-  Serial.println("Reading basic values from BME280");
-
   Wire.begin();
+  Serial.begin(BAUD_RATE);
+  Serial.println("Reading basic values from BME280");
 
   if (mySensor.beginI2C() == false)
   {

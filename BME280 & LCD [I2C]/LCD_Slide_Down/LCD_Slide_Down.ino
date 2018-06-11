@@ -3,6 +3,8 @@
 
 #include "SparkFunBME280.h"
 
+#define BAUD_RATE 9600
+
 #define ROW 2
 #define COL 16
 
@@ -21,7 +23,7 @@ int prev = 3;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
   Serial.println("Reading basic values from BME280");
 
   Wire.begin();
