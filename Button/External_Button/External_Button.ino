@@ -1,8 +1,5 @@
-#define LEDPIN 2
-#define BTNPIN 5
-
-const int LEDPIN = 2;
-const int BTNPIN = 5;
+#define LEDPIN LED_BUILTIN
+#define BTNPIN 3
 
 void setup() {
   pinMode(LEDPIN, OUTPUT);
@@ -10,7 +7,7 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, digitalRead(BTNPIN));
+  digitalWrite(LEDPIN, digitalRead(BTNPIN));
   delay(100);
 }
 
