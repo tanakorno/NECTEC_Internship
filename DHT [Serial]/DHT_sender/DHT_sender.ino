@@ -6,8 +6,8 @@
 #define DHTPIN 2
 #define DHTTYPE DHT22
 
-#define RXPIN 1
-#define TXPIN 0
+#define RXPIN 0
+#define TXPIN 1
 
 SoftwareSerial mySerial(RXPIN, TXPIN);
 DHT dht(DHTPIN, DHTTYPE);
