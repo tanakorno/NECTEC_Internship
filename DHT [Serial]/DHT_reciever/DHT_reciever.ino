@@ -1,8 +1,8 @@
 #include <SoftwareSerial.h>
 
 #define BR 9600
-#define RXPIN 0
-#define TXPIN 1
+#define RXPIN 10
+#define TXPIN 11
 
 SoftwareSerial mySerial(RXPIN, TXPIN);
 String data = "";
