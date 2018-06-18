@@ -1,6 +1,9 @@
 #include <WiFi.h>
 
-void connectToWiFi(char* ssid, char* password) {
+char* ssid = "BS-IOT";
+char* password = "1234567890";
+
+void connectToWiFi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
 
@@ -16,3 +19,11 @@ void connectToWiFi(char* ssid, char* password) {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
+
+
+void reconnectToWiFi() {
+  Serial.println();
+  Serial.print("Re-");
+  connectToWiFi();
+}
+
