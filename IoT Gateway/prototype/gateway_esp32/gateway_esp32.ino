@@ -1,22 +1,22 @@
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
 
-#define BAUD_RATE 9600
+#define ESP32_BR 115200
+#define SERIAL_BR 9600
 
-#define RXPIN 10
-#define TXPIN 11
+#define RXPIN 18
+#define TXPIN 19
 
-SoftwareSerial mySerial(RXPIN, TXPIN);
+HardwareSerial mySerial(1);
 
 void setup() {
   pinMode(RXPIN, INPUT);
   pinMode(TXPIN, OUTPUT);
 
-  Serial.begin(BAUD_RATE);
-  mySerial.begin(BAUD_RATE);
+  Serial.begin(ESP32_BR);
+  mySerial.begin(SERIAL_BR, SERIAL_8N1, RXPIN, TXPIN);
 }
 
 void loop() {
-
   if (mySerial.available()) {
     Serial.write(mySerial.read());
   }

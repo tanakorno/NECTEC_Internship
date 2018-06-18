@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-#include <DHT.h>
+#include "DHT.h"
 
 #define TAP           '\t'
 #define COMMA         ','
@@ -8,9 +8,10 @@
 #define RXPIN         10
 #define TXPIN         11
 
+#define LEDPIN        A0
 #define LDRPIN        A1
 
-#define DHTPIN        2
+#define DHTPIN        12
 #define DHTTYPE       DHT22
 
 #define MODEPIN       13
@@ -28,12 +29,17 @@ uint8_t mode = 3;
 void setup() {
   pinMode(RXPIN, INPUT);
   pinMode(TXPIN, OUTPUT);
+  pinMode(LEDPIN, OUTPUT);
   pinMode(MODEPIN, INPUT);
 
   Serial.begin(BAUD_RATE);
   mySerial.begin(BAUD_RATE);
 
   dht.begin();
+
+  digitalWrite(LEDPIN, HIGH);
+
+  Serial.println("DHT22 and LDR Sensor");
 }
 
 void loop() {
@@ -44,9 +50,9 @@ void loop() {
     while (mySerial.available()) {
       char c = mySerial.read();
 
-      if (c != '\n') {
+      if (isalpha(c)) {
         cmd.concat(c);
-      } else {
+      } else if (c == '\n') {
         Serial.print("Recieve : ");
         Serial.println(cmd);
         if (cmd == "ACT") {
@@ -62,7 +68,7 @@ void loop() {
       sendData();
       tick = 0;
     }
-    
+
     tick ++;
     delay(100);
   }
@@ -83,9 +89,19 @@ void changeMode() {
 void sendData() {
   float h = dht.readHumidity();
   float t = dht.readTemperature();
-  float l = analogRead(LDRPIN);
+  int l = analogRead(LDRPIN);
 
   Serial.println("Sending data...");
+
+  Serial.print(h);
+  Serial.print(COMMA);
+
+  Serial.print(t);
+  Serial.print(COMMA);
+
+  Serial.print(l);
+  Serial.println();
+
 
   mySerial.print(h);
   mySerial.print(COMMA);
@@ -95,5 +111,14 @@ void sendData() {
 
   mySerial.print(l);
   mySerial.println();
+
+  sendingBlink();
 }
 
+void sendingBlink()
+{
+  digitalWrite(LEDPIN, LOW);
+  delay(500);
+  digitalWrite(LEDPIN, HIGH);
+  delay(1500);
+}
