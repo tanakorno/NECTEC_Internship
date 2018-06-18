@@ -13,7 +13,7 @@ void sendData(String data)
 
     Serial.println();
     Serial.print("Sending: ");
-    Serial.println(url);
+    Serial.println(data);
 
     int httpCode = http.GET();
     

@@ -1,5 +1,6 @@
 #include <HardwareSerial.h>
 
+#define DOT         '.'
 #define LF          '\n'
 #define CR          '\r'
 #define ESP32_BR    115200
