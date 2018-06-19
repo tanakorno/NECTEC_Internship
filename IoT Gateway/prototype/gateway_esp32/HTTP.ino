@@ -18,12 +18,10 @@ void sendData(String data)
     int httpCode = http.GET();
     
     if (httpCode > 0) {
-
       String payload = http.getString();
       Serial.print("Recieve: ");
       Serial.println(payload);
       sendingBlink();
-
     } else {
       delay(5000);
     }

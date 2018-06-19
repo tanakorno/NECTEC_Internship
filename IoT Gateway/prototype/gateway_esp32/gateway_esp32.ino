@@ -35,8 +35,11 @@ void loop() {
     if (c == LF) {
       if (data != "Invalid Command") {
         sendData(data);
-        data = "";
+      } else {
+        Serial.println(data);
       }
+
+      data = "";
     }
     
   }
