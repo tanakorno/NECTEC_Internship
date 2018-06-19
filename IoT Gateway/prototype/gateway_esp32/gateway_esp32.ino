@@ -26,9 +26,10 @@ void loop() {
   if (mySerial.available()) {
     char c = mySerial.read();
 
-    // Serial.print(int(c));
 
     if (c != CR and c != LF) {
+
+      Serial.print(int(c));
       data.concat(c);
     }
 
@@ -48,4 +49,5 @@ void loop() {
     mySerial.write(Serial.read());
   }
 }
+
 
