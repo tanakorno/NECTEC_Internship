@@ -20,6 +20,7 @@ void connectToWiFi() {
   Serial.println(WiFi.localIP());
 }
 
+
 void reconnectToWiFi() {
   Serial.println();
   Serial.print("Re-");
