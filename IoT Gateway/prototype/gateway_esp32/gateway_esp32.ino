@@ -37,10 +37,8 @@ void loop() {
       } else {
         Serial.println(data);
       }
-
       data = "";
     }
-
   }
 
   if (Serial.available()) {
