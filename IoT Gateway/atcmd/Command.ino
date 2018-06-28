@@ -32,9 +32,10 @@ void parseAtCmd(String atcmd) {
 
   atcmd.trim();
 
-  int pid     = atcmd.indexOf(PLUS);
-  String at   = atcmd.substring(0, pid);
-  String cmd  = atcmd.substring(pid + 1);
+  int     pid = atcmd.indexOf(PLUS);
+  String  at  = atcmd.substring(0, pid);
+  String  cmd = atcmd.substring(pid + 1);
+  
   at.trim();
   cmd.trim();
 
@@ -129,7 +130,7 @@ void parseAtCmd(String atcmd) {
     int eid     = cmd.indexOf(EQUAL);
     String str  = cmd.substring(0, eid);
     str.trim();
-    
+
     if (eid == NotFound)  {
       printMissing(str, EQUAL);
     } else if (str.equals(SETCLOUD)) {
