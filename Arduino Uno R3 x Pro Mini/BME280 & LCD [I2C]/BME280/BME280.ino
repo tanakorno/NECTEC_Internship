@@ -1,6 +1,5 @@
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-
+#include "Wire.h"
+#include "LiquidCrystal_I2C.h"
 #include "SparkFunBME280.h"
 
 #define BAUD_RATE 9600
@@ -11,24 +10,22 @@
 BME280 mySensor;
 LiquidCrystal_I2C lcd(0x27, COL, ROW);
 
-
 void setup()
 {
   Wire.begin();
-  Serial.begin(BAUD_RATE);
-  Serial.println("Reading basic values from BME280");
+//  Serial.begin(BAUD_RATE);
+//  Serial.println("Reading basic values from BME280");
 
   if (mySensor.beginI2C() == false)
   {
-    Serial.println("The sensor did not respond. Please check wiring.");
+    lcd.println("The sensor did not respond. Please check wiring.");
     while (1); //Freeze
   }
 
-  Serial.println(mySensor.settings.I2CAddress);
+//  Serial.println(mySensor.settings.I2CAddress);
 
   // LCD
   lcd.begin();
-  lcd.backlight();
 }
 
 void loop()
