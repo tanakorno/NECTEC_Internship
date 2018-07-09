@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+#include "SoftwareSerial.h"
 #include "DHT.h"
 
 #define TAP           '\t'
@@ -101,7 +101,6 @@ void sendData() {
 
   Serial.print(l);
   Serial.println();
-
 
   mySerial.print(h);
   mySerial.print(COMMA);

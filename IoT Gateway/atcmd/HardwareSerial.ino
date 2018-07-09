@@ -14,7 +14,7 @@ void setupHWSerial() {
 
 void writeHWSerial(String str) {
   HWSerial.println(str);
-}
+} 
 
 void readHWSerial() {
   if (HWSerial.available()) {
@@ -24,7 +24,7 @@ void readHWSerial() {
       HWData.concat(c);
     }
 
-    if (c == LF) {
+    if (c == LF and HWData != "") {
       if (HWData != "invalid command") {
         CMDSerial.print("get data from sensor: ");
         CMDSerial.println(HWData);
@@ -36,4 +36,5 @@ void readHWSerial() {
     }
   }
 }
+
 

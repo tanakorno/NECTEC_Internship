@@ -4,7 +4,6 @@
 #define OK          "OK"
 #define ERR         "ERR"
 
-#define ARROWUP     ''
 #define COMMA       ','
 #define PLUS        '+'
 #define EQUAL       '='
@@ -23,8 +22,10 @@
 #define ACT         "ACT"
 #define SENSOR      "SNR"
 
-#define SETCLOUD    "SETCLOUD"
-#define CLOUDSTAT   "CLOUDSTAT"
+#define GET_CLOUD   "GETCLD"
+#define SET_CLOUD   "SETCLD"
+#define CLOUD_MODE  "CLDMODE"
+#define CLOUD_STAT  "CLDSTAT"
 
 bool actCloud = true;
 
@@ -35,7 +36,7 @@ void parseAtCmd(String atcmd) {
   int     pid = atcmd.indexOf(PLUS);
   String  at  = atcmd.substring(0, pid);
   String  cmd = atcmd.substring(pid + 1);
-  
+
   at.trim();
   cmd.trim();
 
@@ -119,13 +120,11 @@ void parseAtCmd(String atcmd) {
       printUnknown(cmd);
     }
 
-  } else if (cmd.equals(CLOUDSTAT)) {
+  } else if (cmd.equals(GET_CLOUD)) {
 
-    CMDSerial.print(actCloud ? "enable" : "disable");
-    CMDSerial.println(" send data from sensor to cloud");
+    CMDSerial.println(getCloud());
 
-
-  } else if (cmd.startsWith(SETCLOUD)) {
+  } else if (cmd.startsWith(SET_CLOUD)) {
 
     int eid     = cmd.indexOf(EQUAL);
     String str  = cmd.substring(0, eid);
@@ -133,13 +132,34 @@ void parseAtCmd(String atcmd) {
 
     if (eid == NotFound)  {
       printMissing(str, EQUAL);
-    } else if (str.equals(SETCLOUD)) {
+    } else if (str.equals(SET_CLOUD)) {
       String param = cmd.substring(eid + 1);
       param.trim();
-      if (param == "ENABLE" or param == "TRUE") {
+      setCloud(param);
+    } else {
+      printUnknown(cmd);
+    }
+
+  } else if (cmd.equals(CLOUD_STAT)) {
+
+    CMDSerial.print(actCloud ? "ON: enable" : "OFF: disable");
+    CMDSerial.println(" send data from sensor to cloud");
+
+  } else if (cmd.startsWith(CLOUD_MODE)) {
+
+    int eid     = cmd.indexOf(EQUAL);
+    String str  = cmd.substring(0, eid);
+    str.trim();
+
+    if (eid == NotFound)  {
+      printMissing(str, EQUAL);
+    } else if (str.equals(CLOUD_MODE)) {
+      String param = cmd.substring(eid + 1);
+      param.trim();
+      if (param == "ON") {
         actCloud = true;
         CMDSerial.println(OK);
-      } else if (param = "DISABLE" or param == "FALSE") {
+      } else if (param = "OFF") {
         actCloud = false;
         CMDSerial.println(OK);
       } else {
@@ -156,11 +176,9 @@ void parseAtCmd(String atcmd) {
 }
 
 void printUnknown(String cmd) {
-  CMDSerial.print("AT + : ");
+  CMDSerial.print("AT+");
   CMDSerial.print(cmd);
   CMDSerial.println(": unknown command");
-
-  CMDSerial.println("I'm sorry, I'm afraid I can't let you do that.");
 }
 
 void printMissing(String str, char sym) {
@@ -169,4 +187,5 @@ void printMissing(String str, char sym) {
   CMDSerial.print(sym);
   CMDSerial.println(" identifier");
 }
+
 

@@ -10,6 +10,11 @@
 void setup()
 {
   Serial.begin(ESP32_BR);
+
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  
   setupEEPROM();
   setupHWSerial();
   setupBTSerial();
@@ -21,3 +26,4 @@ void loop()
   readHWSerial(); // Sensor
   readBTSerial(); // User
 }
+

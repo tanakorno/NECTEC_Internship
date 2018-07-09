@@ -1,11 +1,15 @@
 #include "HTTPClient.h"
 
 #define LEDSTAT 2
-#define cloud_url "http://push02.igridproject.info/kb01?data="
+//#define cloud_url "http://push02.igridproject.info/kb01?data="
 
 void sendData(String data)
 {
-  String url = cloud_url + data;
+  String url = getCloud() + data;
+
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWiFi(getSsid(), getPass());
+  }
 
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
@@ -26,7 +30,7 @@ void sendData(String data)
     }
     http.end();
   } else {
-    CMDSerial.println("no WiFi connected");
+    printNoWiFi();
   }
 }
 
@@ -37,4 +41,5 @@ void sendingBlink()
   digitalWrite(LEDSTAT, HIGH);
   delay(1900);
 }
+
 
