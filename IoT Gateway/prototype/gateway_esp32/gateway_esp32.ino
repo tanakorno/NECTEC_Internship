@@ -19,7 +19,7 @@ void setup() {
   Serial.begin(ESP32_BR);
   mySerial.begin(SERIAL_BR, SERIAL_8N1, RXPIN, TXPIN);
 
-  connectToWiFi();
+//  connectToWiFi();
 }
 
 void loop() {

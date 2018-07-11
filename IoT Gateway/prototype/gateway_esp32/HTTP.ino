@@ -28,7 +28,7 @@ void sendData(String data)
 
     http.end();
   } else {
-    reconnectToWiFi();
+//    reconnectToWiFi();
   }
 }
 

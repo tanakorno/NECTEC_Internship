@@ -95,7 +95,7 @@ void parseAtCmd(String atcmd) {
   } else if (cmd.equals(GETIP)) {
 
     getIp();
-
+    
   } else if (cmd.equals(APSTAT)) {
 
     getApStat();
@@ -143,7 +143,7 @@ void parseAtCmd(String atcmd) {
   } else if (cmd.equals(CLOUD_STAT)) {
 
     CMDSerial.print(actCloud ? "ON: enable" : "OFF: disable");
-    CMDSerial.println(" send data from sensor to cloud");
+    CMDSerial.println(" send data to cloud");
 
   } else if (cmd.startsWith(CLOUD_MODE)) {
 

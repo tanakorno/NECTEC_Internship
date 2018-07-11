@@ -58,7 +58,6 @@ void setCloud(String url) {
 void setAP(String ssid, String pass) {
   setSsid(ssid);
   setPass(pass);
-  CMDSerial.println(OK);
 }
 
 void setupEEPROM()
