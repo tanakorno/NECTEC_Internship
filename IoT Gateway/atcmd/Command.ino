@@ -4,11 +4,12 @@
 #define OK          "OK"
 #define ERR         "ERR"
 
-#define COMMA       ','
 #define PLUS        '+'
 #define EQUAL       '='
+#define QUEST       '?'
+#define COMMA       ','
 
-#define CMD         "AT"
+#define AT          "AT"
 
 #define HELP        "HELP"
 #define GETAP       "GETAP"
@@ -17,68 +18,74 @@
 #define CONAP       "CONAP"
 #define DISAP       "DISAP"
 #define GETIP       "GETIP"
-#define APSTAT      "APSTAT"
+#define STATAP      "STATAP"
 
 #define ACT         "ACT"
 #define SENSOR      "SNR"
 
-#define GET_CLOUD   "GETCLD"
-#define SET_CLOUD   "SETCLD"
-#define CLOUD_MODE  "CLDMODE"
-#define CLOUD_STAT  "CLDSTAT"
+#define GETCLD      "GETCLD"
+#define SETCLD      "SETCLD"
+#define ACTCLD      "ACTCLD"
+#define STATCLD     "STATCLD"
 
 bool actCloud = true;
 
-void parseAtCmd(String atcmd) {
-
-  atcmd.trim();
-
-  int     pid = atcmd.indexOf(PLUS);
-  String  at  = atcmd.substring(0, pid);
-  String  cmd = atcmd.substring(pid + 1);
-
-  at.trim();
-  cmd.trim();
+void parser(String atcmd) {
 
   CMDSerial.println("");
   CMDSerial.println(atcmd);
 
-  if (not at.equals(CMD)) {
-    CMDSerial.print("missing command ");
-    CMDSerial.print(CMD);
-    CMDSerial.print("+");
-    CMDSerial.println("");
+  int     pid     = atcmd.indexOf(PLUS);
+  int     eid     = atcmd.indexOf(EQUAL);
+
+  String  at      = atcmd.substring(0, pid);
+  String  cmd     = atcmd.substring(pid + 1, eid);
+  String  params  = atcmd.substring(eid + 1 );
+
+  at.trim();
+  cmd.trim();
+  params.trim();
+
+  if (not at.equals(AT) or pid == NotFound) {
+    printUnknown(atcmd);
     return;
   }
 
   if (cmd.equals(HELP)) {
 
+    CMDSerial.println("at command syntax: AT+<CMD> - <CMD> list: ");
+    CMDSerial.println("1.  GETAP               - display ssid and password           ");
+    CMDSerial.println("2.  SETAP=<SSID>,<PASS> - set ssid and password               ");
+    CMDSerial.println("3.  SCANAP              - scan for ap                         ");
+    CMDSerial.println("4.  CONAP               - connect to ap                       ");
+    CMDSerial.println("5.  DISAP               - disconnect from ap                  ");
+    CMDSerial.println("6.  STATAP              - display connected ap and ip         ");
+    CMDSerial.println("7.  SNR=<STRING>        - send <STRING> to sensor module      ");
+    CMDSerial.println("8.  GETCLD              - display cloud url                   ");
+    CMDSerial.println("9.  SETCLD=<URL>        - set cloud url                       ");
+    CMDSerial.println("10. ACTCLD=<MODE>       - <MODE>=<ON>/<OFF> send data to cloud");
+    CMDSerial.println("11. STATCLD             - display cloud mode                  ");
 
   } else if (cmd.equals(GETAP)) {
 
-    String ssid = getSsid();
-    String pass = getPass();
-    CMDSerial.print("ssid: "); CMDSerial.println(ssid);
-    CMDSerial.print("password: "); CMDSerial.println(pass);
+    CMDSerial.print("ssid: ");
+    CMDSerial.println(getSsid());
+    CMDSerial.print("password: ");
+    CMDSerial.println(getPass());
 
-  } else if (cmd.startsWith(SETAP)) {
+  } else if (cmd.equals(SETAP)) {
 
-    int eid     = cmd.indexOf(EQUAL);
-    int cid     = cmd.indexOf(COMMA);
-    String str  = cmd.substring(0, eid);
-    str.trim();
-
-    if (eid == NotFound)  {
-      printMissing(str, EQUAL);
-    } else if (str.equals(SETAP)) {
-      String ssid = cmd.substring(eid + 1, cid);
-      String pass = cmd.substring(cid + 1);
-      ssid.trim();
-      pass.trim();
-      setAP(ssid, pass);
-    } else {
-      printUnknown(cmd);
+    if (eid == NotFound) {
+      printMissing(cmd, EQUAL);
+      return;
     }
+
+    int cid = params.indexOf(COMMA);
+    String ssid = params.substring(0, cid);
+    String pass = params.substring(cid + 1);
+    ssid.trim();
+    pass.trim();
+    setAP(ssid, pass);
 
   } else if (cmd.equals(SCANAP)) {
 
@@ -95,89 +102,58 @@ void parseAtCmd(String atcmd) {
   } else if (cmd.equals(GETIP)) {
 
     getIp();
-    
-  } else if (cmd.equals(APSTAT)) {
+
+  } else if (cmd.equals(STATAP)) {
 
     getApStat();
 
-  } else if (cmd.equals(ACT)) {
+  } else if (cmd.equals(SENSOR)) {
 
-    writeHWSerial(cmd);
-
-  } else if (cmd.startsWith(SENSOR)) {
-
-    int eid     = cmd.indexOf(EQUAL);
-    String str  = cmd.substring(0, eid);
-    str.trim();
-
-    if (eid == NotFound)  {
-      printMissing(str, EQUAL);
-    } else if (str.equals(SENSOR)) {
-      String param = cmd.substring(eid + 1);
-      param.trim();
-      writeHWSerial(param);
-    } else {
-      printUnknown(cmd);
+    if (eid == NotFound) {
+      printMissing(cmd, EQUAL);
+      return;
     }
 
-  } else if (cmd.equals(GET_CLOUD)) {
+    writeHWSerial(params);
 
+  } else if (cmd.equals(GETCLD)) {
+
+    CMDSerial.print("cloud url: ");
     CMDSerial.println(getCloud());
 
-  } else if (cmd.startsWith(SET_CLOUD)) {
+  } else if (cmd.equals(SETCLD)) {
 
-    int eid     = cmd.indexOf(EQUAL);
-    String str  = cmd.substring(0, eid);
-    str.trim();
-
-    if (eid == NotFound)  {
-      printMissing(str, EQUAL);
-    } else if (str.equals(SET_CLOUD)) {
-      String param = cmd.substring(eid + 1);
-      param.trim();
-      setCloud(param);
-    } else {
-      printUnknown(cmd);
+    if (eid == NotFound) {
+      printMissing(cmd, EQUAL);
+      return;
     }
 
-  } else if (cmd.equals(CLOUD_STAT)) {
+    setCloud(params);
+
+  } else if (cmd.equals(STATCLD)) {
 
     CMDSerial.print(actCloud ? "ON: enable" : "OFF: disable");
     CMDSerial.println(" send data to cloud");
 
-  } else if (cmd.startsWith(CLOUD_MODE)) {
+  } else if (cmd.equals(ACTCLD)) {
 
-    int eid     = cmd.indexOf(EQUAL);
-    String str  = cmd.substring(0, eid);
-    str.trim();
-
-    if (eid == NotFound)  {
-      printMissing(str, EQUAL);
-    } else if (str.equals(CLOUD_MODE)) {
-      String param = cmd.substring(eid + 1);
-      param.trim();
-      if (param == "ON") {
-        actCloud = true;
-        CMDSerial.println(OK);
-      } else if (param = "OFF") {
-        actCloud = false;
-        CMDSerial.println(OK);
-      } else {
-        printUnknown(param);
-      }
-    } else {
-      printUnknown(cmd);
+    if (eid == NotFound) {
+      printMissing(cmd, EQUAL);
+      return;
     }
 
-  } else {
-    printUnknown(cmd);
-  }
+    actCloud = params == "ON";
+    CMDSerial.println(OK);
 
+  } else {
+
+    printUnknown(atcmd);
+
+  }
 }
 
-void printUnknown(String cmd) {
-  CMDSerial.print("AT+");
-  CMDSerial.print(cmd);
+void printUnknown(String atcmd) {
+  CMDSerial.print(atcmd);
   CMDSerial.println(": unknown command");
 }
 

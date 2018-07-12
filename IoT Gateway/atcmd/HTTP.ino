@@ -7,9 +7,7 @@ void sendData(String data)
 {
   String url = getCloud() + data;
 
-  if (WiFi.status() != WL_CONNECTED) {
-    connectWiFi(getSsid(), getPass());
-  }
+
 
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
@@ -30,7 +28,9 @@ void sendData(String data)
     }
     http.end();
   } else {
-    printNoWiFi();
+    if (WiFi.status() != WL_CONNECTED) {
+      connectWiFi(getSsid(), getPass());
+    }
   }
 }
 

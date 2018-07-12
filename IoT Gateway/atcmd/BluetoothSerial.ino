@@ -28,7 +28,7 @@ void readBTSerial() {
     }
 
     if (c == LF and BTData != "") {
-      parseAtCmd(BTData);
+      parser(BTData);
       BTData = "";
     }
   }
