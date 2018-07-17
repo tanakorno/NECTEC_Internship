@@ -7,8 +7,6 @@ void sendData(String data)
 {
   String url = getCloud() + data;
 
-
-
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(url);
